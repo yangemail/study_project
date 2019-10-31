@@ -35,6 +35,9 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'article', 'user', 'content', 'date_publish', 'pid',)
+    list_per_page = 50
+    list_display_links = ('id', 'content',)
     ordering = ['-date_publish', ]
 
 
