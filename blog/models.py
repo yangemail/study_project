@@ -1,13 +1,15 @@
 from django.db import models
 
 from django.contrib.auth.models import AbstractUser
+from DjangoUeditor.models import UEditorField
 
 
 class User(AbstractUser):
     avatar = models.ImageField(upload_to='avatar/%Y/%m', default='avatar/default.png', max_length=200, blank=True,
                                null=True, verbose_name='用户头像')
     qq = models.CharField(max_length=20, blank=True, null=True, verbose_name='QQ号码')
-    mobile = models.CharField(max_length=20, blank=True, null=True, unique=True, verbose_name='手机号码')
+    mobile = models.CharField(max_length=11, blank=True, null=True, unique=True, verbose_name='手机号码')
+    url = models.URLField(max_length=100, blank=True, null=True, verbose_name='个人网页地址')
 
     class Meta:
         verbose_name = '用户'
@@ -59,7 +61,11 @@ class Article(models.Model):
     title = models.CharField(max_length=50, verbose_name='文章标题')
     excerpt = models.TextField(max_length=200, blank=True, verbose_name='文章摘要')
     desc = models.CharField(max_length=50, verbose_name='文章描述')
-    content = models.TextField(verbose_name='文章内容')
+    # content = models.TextField(verbose_name='文章内容')
+    content = UEditorField(width=800, height=500, toolbars='full',
+                           imagePath='upimg/', filePath='upfile/',
+                           upload_settings={'imageMaxSize':1204000},
+                           settings={}, command=None, blank=True, verbose_name='文章内容')
     click_count = models.IntegerField(default=0, verbose_name='点击次数')
     is_recommend = models.BooleanField(default=False, verbose_name='是否推荐')
     date_publish = models.DateTimeField(auto_now_add=True, verbose_name='发布时间')
@@ -82,10 +88,13 @@ class Article(models.Model):
 
 class Comment(models.Model):
     content = models.TextField(verbose_name='评论内容')
+    username = models.CharField(max_length=30, blank=True, null=True, verbose_name='用户名')
+    email = models.EmailField(max_length=50, blank=True, null=True, verbose_name='邮箱地址')
+    url = models.URLField(max_length=100, blank=True, null=True,verbose_name='个人网页地址')
     date_publish = models.DateTimeField(auto_now_add=True, verbose_name='发布时间')
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='用户')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, verbose_name='用户')
     article = models.ForeignKey(Article, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='文章')
-    pid = models.ForeignKey('self', on_delete=models.SET_NULL, blank=True, null=True, verbose_name='父级评论')
+    pid = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, verbose_name='父级评论')
 
     class Meta:
         verbose_name = '评论'

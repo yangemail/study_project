@@ -24,8 +24,10 @@ from blog import views
 from blog.upload import upload_image
 
 urlpatterns = [
-    re_path('^admin/upload/(?P<dir_name>[^/]+)$', upload_image, name='upload_image'),
-    re_path("^uploads/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT,}),
+    # re_path('^admin/upload/(?P<dir_name>[^/]+)$', upload_image, name='upload_image'),
+    # re_path("^uploads/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT,}),
     path('admin/', admin.site.urls),
-    path('', include('blog.urls'))
+    path('', include('blog.urls')),
+    path('ueditor/', include('DjangoUeditor.urls')), #添加DjangoUeditor的URL
+    re_path('^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]

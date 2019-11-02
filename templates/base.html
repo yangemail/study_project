@@ -9,17 +9,13 @@
     <meta name="description" content="{{ SITE_DESC }}"/>
     <link href="{% static 'css/base.css' %}" rel="stylesheet">
     <link href="{% static 'css/index.css' %}" rel="stylesheet">
-
-    {% block custom_css %}
-    {% endblock %}
-
+    {% block custom_css %}{% endblock %}
     <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
     <script type="text/javascript" src={% static 'js/sliders.js' %}></script>
     <!--[if lt IE 9]>
 <script src="js/modernizr.js"></script>
 <![endif]-->
-    {% block custom_js %}
-    {% endblock %}
+    {% block custom_js %}{% endblock %}
 </head>
 <body>
 <header>
@@ -31,7 +27,7 @@
         <ul>
             <a href="/" target="_self">首页</a>
             {% for category in category_list %}
-                <a href="news.html" target="_blank">{{ category }}</a>
+                <a href="{% url 'category' %}?cid={{ category.id }}" target="_self">{{ category.name }}</a>
             {% endfor %}
         </ul>
         <script src="js/nav.js"></script>
@@ -94,7 +90,7 @@
                 <div class="bd bd-news">
                     <ul>
                         {% for article in article_comment_order_list %}
-                            <li><a href="/" target="_blank">{{article.title | slice:':15'}}</a></li>
+                            <li><a href="/" target="_blank">{{ article.title | slice:':15' }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
